@@ -12,14 +12,14 @@ with open('LICENSE') as f:
     license = f.read()
 
 setup(
-    name='sample',
+    name='math3d',
     version='0.1.0',
-    description='Sample package for Python-Guide.org',
+    description='library for 3-dimensional mathematics',
     long_description=readme,
-    author='Kenneth Reitz',
-    author_email='me@kennethreitz.com',
-    url='https://github.com/kennethreitz/samplemod',
+    author='yocchi',
+    author_email='yocchiman@gmail.com',
+    install_requires=['numpy'],
+    url='https://github.com/yocchi/math3d',
     license=license,
     packages=find_packages(exclude=('tests', 'docs'))
 )
-

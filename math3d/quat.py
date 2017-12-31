@@ -17,6 +17,12 @@ class Quat(object):
         return self.q[index]
     def __repr__(self):
         return 'x=%g, y=%g, z=%g, w=%g' % (self.q[0], self.q[1], self.q[2], self.q[3])
+    def __add__(self, other):
+        return Quat(self.q[0] + other.q[0], self.q[1] + other.q[1],
+                    self.q[2] + other.q[2], self.q[3] + other.q[3])
+    def __sub__(self, other):
+        return Quat(self.q[0] - other.q[0], self.q[1] - other.q[1],
+                    self.q[2] - other.q[2], self.q[3] - other.q[3])
     def __mul__(self, other):
         x0, y0, z0, w0 = self.q
         x1, y1, z1, w1 = other.q
@@ -24,10 +30,12 @@ class Quat(object):
                     w0*y1 - x0*z1 + y0*w1 + z0*x1,
                     w0*z1 + x0*y1 - y0*x1 + z0*w1,
                     w0*w1 - x0*x1 - y0*y1 - z0*z1)
+    def __rmul__(self, lhs):
+        return Quat(lhs*self.q[0], lhs*self.q[1], lhs*self.q[2], lhs*self.q[3])
     def __neg__(self):
         return Quat(-self.q[0], -self.q[1], -self.q[2], -self.q[3])
     def conj(self):
-        return Quat(self.q[0], self.q[1], self.q[2], -self.q[3])
+        return Quat(-self.q[0], -self.q[1], -self.q[2], self.q[3])
     def inv(self):
         return self.conj()
     def rotate(self, v):
@@ -76,7 +84,7 @@ class Quat(object):
         return rot
     @staticmethod
     def Identity():
-        return Quat(1.0, 0.0, 0.0, 0.0)
+        return Quat(0.0, 0.0, 0.0, 1.0)
     @staticmethod
     def AxisAngle(axis, angle):
         ax = np.array(axis, dtype=np.float64)

@@ -32,6 +32,18 @@ class TestQuat(unittest.TestCase):
         np.testing.assert_almost_equal(e[0], euler[0])
         np.testing.assert_almost_equal(e[1], euler[1])
         np.testing.assert_almost_equal(e[2], euler[2])
+    def test_rot(self):
+        axis = [1, 0, 0]
+        angle = 0.5 * math.pi
+        q = Quat.AxisAngle(axis, angle)
+        v = np.array([0, 1, 0])
+        vq = q.rotate(v)
+        np.testing.assert_almost_equal(vq[0], 0)
+        np.testing.assert_almost_equal(vq[1], 0)
+        np.testing.assert_almost_equal(vq[2], 1)
+        r = q.toRot()
+        vr = r.dot(v)
+        np.testing.assert_almost_equal(vq, vr)
 
 if __name__ == '__main__':
     unittest.main()

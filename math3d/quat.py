@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import math
+import random
 
 class Quat(object):
     def __init__(self, x, y, z, w):
@@ -44,9 +45,16 @@ class Quat(object):
 	x1 = v[1] * w + v[0] * z - v[2] * x
 	x2 = v[2] * w + v[1] * x - v[0] * y
 	x3 = v[0] * x + v[1] * y + v[2] * z
-        return [w * x0 + x * x3 + y * x2 - z * x1,
-                w * x1 + y * x3 + z * x0 - x * x2,
-                w * x2 + z * x3 + x * x1 - y * x0]
+        return np.array([w * x0 + x * x3 + y * x2 - z * x1,
+                         w * x1 + y * x3 + z * x0 - x * x2,
+                         w * x2 + z * x3 + x * x1 - y * x0])
+    def normalize(self):
+        self.q = self.q / self.norm()
+        return self
+    def norm(self):
+        return np.linalg.norm(self.q)
+    def dot(self, other):
+        return self.q.dot(other.q)
     def toEuler(self):
         x, y, z, w = self.q
 	# roll (x-axis rotation)
@@ -65,7 +73,7 @@ class Quat(object):
 	siny = 2.0 * (w * z + x * y)
 	cosy = 1.0 - 2.0 * (y * y + z * z)
 	yaw = math.atan2(siny, cosy)
-        return [roll, pitch, yaw]
+        return np.array([roll, pitch, yaw])
     def toRot(self):
         x, y, z, w = self.q
 	wx, wy, wz = (2.0*w*x, 2.0*w*y, 2.0*w*z)
@@ -96,3 +104,11 @@ class Quat(object):
         qy = Quat.AxisAngle([0, 1, 0], euler[1])
         qz = Quat.AxisAngle([0, 0, 1], euler[2])
         return qz * qy * qx
+    @staticmethod
+    def Random():
+        x = random.uniform(-1.0, 1.0)
+        y = random.uniform(-1.0, 1.0)
+        z = random.uniform(-1.0, 1.0)
+        w = random.uniform(-1.0, 1.0)
+        q = Quat(x, y, z, w)
+        return q.normalize()

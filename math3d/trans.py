@@ -20,8 +20,8 @@ class Trans(object):
         return Trans(self.pos + self.q.rotate(other.pos),
                      self.q * other.q)
     @staticmethod
-    def Random():
+    def random():
         x = random.uniform(-1.0, 1.0)
         y = random.uniform(-1.0, 1.0)
         z = random.uniform(-1.0, 1.0)
-        return Trans(np.array([x, y, z]), Quat.Random())
+        return Trans(np.array([x, y, z]), Quat.random())

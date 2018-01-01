@@ -13,8 +13,8 @@ np.set_printoptions(precision=3, suppress=True)
 class TestDualQuat(unittest.TestCase):
     def test_trans(self):
         t = [1.0, 2.0, 3.0]
-        q = DualQuat.Trans(t=Quat(t[0], t[1], t[2], 0.0),
-                           r=Quat.Euler([0.5 * math.pi, 0.0, 0.0]))
+        q = DualQuat.trans(t=Quat(t[0], t[1], t[2], 0.0),
+                           r=Quat.euler([0.5 * math.pi, 0.0, 0.0]))
         v = [1.0, 0.0, 2.0]
         vq = q.transformVec(v)
         vans = [2, 0, 3]
@@ -25,12 +25,12 @@ class TestDualQuat(unittest.TestCase):
     def test_handeye(self):
         'Hand-Eye Calibration Using Dual Quaternions'
         X = Trans([0.1, 0.2, 0.3],
-                  Quat.Euler([0.4, -0.5, 0.6]))
+                  Quat.euler([0.4, -0.5, 0.6]))
         Z = Trans([0.9, 0.7, 0.8],
-                  Quat.Euler([0.15, -0.25, 0.35]))
+                  Quat.euler([0.15, -0.25, 0.35]))
         N = 3
         M = N - 1
-        B = [Trans.Random() for i in range(N)]
+        B = [Trans.random() for i in range(N)]
         A = [X * B[i].inv() * Z for i in range(N)]
         a = [DualQuat.fromTrans(A[i+1] * A[i].inv()) for i in range(M)]
         b = [DualQuat.fromTrans(B[i+1].inv() * B[i]) for i in range(M)]

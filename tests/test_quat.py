@@ -23,19 +23,19 @@ class TestQuat(unittest.TestCase):
     def test_axis_angle(self):
         axis = [5, 4, 3]
         angle = 1.2
-        q = Quat.AxisAngle(axis, angle)
+        q = Quat.axisAngle(axis, angle)
         self.assertEqual(q.w, math.cos(angle / 2))
     def test_euler_angle(self):
-        euler = [0.5, -0.4, 0.3]
-        q = Quat.Euler(euler)
+        ang = [0.5, -0.4, 0.3]
+        q = Quat.euler(ang)
         e = q.toEuler()
-        np.testing.assert_almost_equal(e[0], euler[0])
-        np.testing.assert_almost_equal(e[1], euler[1])
-        np.testing.assert_almost_equal(e[2], euler[2])
+        np.testing.assert_almost_equal(e[0], ang[0])
+        np.testing.assert_almost_equal(e[1], ang[1])
+        np.testing.assert_almost_equal(e[2], ang[2])
     def test_rot(self):
         axis = [1, 0, 0]
         angle = 0.5 * math.pi
-        q = Quat.AxisAngle(axis, angle)
+        q = Quat.axisAngle(axis, angle)
         v = np.array([0, 1, 0])
         vq = q.rotate(v)
         np.testing.assert_almost_equal(vq[0], 0)

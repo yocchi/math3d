@@ -55,6 +55,9 @@ class Quat(object):
         return np.linalg.norm(self.q)
     def dot(self, other):
         return self.q.dot(other.q)
+    def log(self):
+        n = np.linalg.norm(self.q[0:3])
+        return np.array(self.q[0:3] * (2.0 * math.acos(self.q[3]) / n))
     def toEuler(self):
         x, y, z, w = self.q
 	# roll (x-axis rotation)
@@ -91,21 +94,26 @@ class Quat(object):
 	rot[2, 2] = 1 - xx - yy
         return rot
     @staticmethod
-    def Identity():
+    def identity():
         return Quat(0.0, 0.0, 0.0, 1.0)
     @staticmethod
-    def AxisAngle(axis, angle):
+    def axisAngle(axis, angle):
         ax = np.array(axis, dtype=np.float64)
         ax *= math.sin(0.5 * angle) / np.linalg.norm(ax)
         return Quat(ax[0], ax[1], ax[2], math.cos(0.5 * angle))
     @staticmethod
-    def Euler(euler):
-        qx = Quat.AxisAngle([1, 0, 0], euler[0])
-        qy = Quat.AxisAngle([0, 1, 0], euler[1])
-        qz = Quat.AxisAngle([0, 0, 1], euler[2])
+    def exp(v):
+        th = np.linalg.norm(v)
+        a = math.sin(0.5 * th) / th
+        return Quat(v[0] * a, v[1] * a, v[2] * a, math.cos(0.5 * th))
+    @staticmethod
+    def euler(ang):
+        qx = Quat.axisAngle([1, 0, 0], ang[0])
+	qy = Quat.axisAngle([0, 1, 0], ang[1])
+	qz = Quat.axisAngle([0, 0, 1], ang[2])
         return qz * qy * qx
     @staticmethod
-    def Random():
+    def random():
         x = random.uniform(-1.0, 1.0)
         y = random.uniform(-1.0, 1.0)
         z = random.uniform(-1.0, 1.0)

@@ -7,6 +7,7 @@ from math3d import Quat, DualQuat, Trans, crossMat
 import unittest
 import math
 import numpy as np
+import scipy.linalg
 
 np.set_printoptions(precision=3, suppress=True)
 
@@ -47,11 +48,16 @@ class TestDualQuat(unittest.TestCase):
             S[i*6+3:i*6+6, 0:3] = crossMat(a[i].q.q[0:3] + b[i].q.q[0:3])
             S[i*6+3:i*6+6, 3] = a[i].q.q[0:3] - b[i].q.q[0:3]
             S[i*6+3:i*6+6, 4:8] = S[i*6+0:i*6+3, 0:4]
-        U, s, V = np.linalg.svd(S, full_matrices=True, compute_uv=True)
-        np.testing.assert_almost_equal(s[6], 0.0)
-        np.testing.assert_almost_equal(s[7], 0.0)
-        v7 = V[6, 0:8].T
-        v8 = V[7, 0:8].T
+        #U, s, V = np.linalg.svd(S, full_matrices=True, compute_uv=True)
+        #np.testing.assert_almost_equal(s[6], 0.0)
+        #np.testing.assert_almost_equal(s[7], 0.0)
+        #v7 = V[6, :].T
+        #v8 = V[7, :].T
+        Q, R, P = scipy.linalg.qr(S.T, pivoting=True)
+        np.testing.assert_almost_equal(R[6, 6], 0.0)
+        np.testing.assert_almost_equal(R[7, 7], 0.0)
+        v7 = Q[:, 6]
+        v8 = Q[:, 7]
         np.testing.assert_almost_equal(np.linalg.norm(v7), 1.0)
         np.testing.assert_almost_equal(np.linalg.norm(v8), 1.0)
         np.testing.assert_almost_equal(S.dot(v7), np.zeros(S.shape[0]))

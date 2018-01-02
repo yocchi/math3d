@@ -5,6 +5,13 @@ import math
 import random
 from quat import Quat
 
+class ScrewParameter(object):
+    def __init__(self, theta, d, l, m):
+        self.theta = theta
+        self.d = d
+        self.l = l
+        self.m = m
+
 class DualQuat(object):
     def __init__(self, p, q):
         self.p = p              # ordinal
@@ -28,7 +35,13 @@ class DualQuat(object):
         return DualQuat(self.p.conj(), self.q.conj())
     def conj3(self):
         return DualQuat(self.p.conj(), -self.q.conj())
-
+    def screwParameter(self):
+        theta = 2.0 * math.acos(self.p.w)
+        n = np.linalg.norm(self.p.q[0:3])
+        d = -2.0 * self.q.w / n
+        l = self.p.q[0:3] / n
+        m = (self.q.q[0:3] - 0.5 * d * self.p.w * l) / n
+        return ScrewParameter(theta, d, l, m)
     @staticmethod
     def trans(r, t):
         return DualQuat(r, 0.5 * t * r)
@@ -42,4 +55,3 @@ class DualQuat(object):
         y = random.uniform(-1.0, 1.0)
         z = random.uniform(-1.0, 1.0)
         return DualQuat.trans(Quat.random(), Quat(x, y, z, 0.0))
-

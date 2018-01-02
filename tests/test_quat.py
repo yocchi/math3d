@@ -44,6 +44,14 @@ class TestQuat(unittest.TestCase):
         r = q.toRot()
         vr = r.dot(v)
         np.testing.assert_almost_equal(vq, vr)
+    def test_explog(self):
+        axis = np.array([1, 0, 0])
+        angle = 0.5 * math.pi
+        q = Quat.axisAngle(axis, angle)
+        w = q.log()
+        qw = Quat.exp(w)
+        np.testing.assert_almost_equal(q.q, qw.q)
+        np.testing.assert_almost_equal(axis * angle, w)
 
 if __name__ == '__main__':
     unittest.main()

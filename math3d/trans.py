@@ -25,3 +25,10 @@ class Trans(object):
         y = random.uniform(-1.0, 1.0)
         z = random.uniform(-1.0, 1.0)
         return Trans(np.array([x, y, z]), Quat.random())
+
+    @staticmethod
+    def xyz(v):
+        return Trans(np.array(v[:3]), Quat.identity())
+    @staticmethod
+    def xyzrpy(v):
+        return Trans(np.array(v[:3]), Quat.euler(v[3:]))
